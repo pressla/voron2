@@ -1,0 +1,190 @@
+##========================== Pin Definitions ========================
+## X
+## Drive0_STEP_PIN         PE2
+## Drive0_DIR_PIN          PC5
+## Drive0_ENABLE_PIN       PF11
+## Drive0_STOP_PIN         PG12 #IO0
+## Drive0_UART_PIN         PC4
+
+## Y
+## Drive1_STEP_PIN         PE3
+## Drive1_DIR_PIN          PF13
+## Drive1_ENABLE_PIN       PF14
+## Drive1_STOP_PIN         PG11 #IO1
+## Drive1_UART_PIN         PF12
+
+## E
+## Drive2_STEP_PIN         PE4
+## Drive2_DIR_PIN          PG0
+## Drive2_ENABLE_PIN       PG1
+## Drive2_STOP_PIN         PG10 #IO2
+## Drive2_UART_PIN         PF15
+
+## Z
+## Drive3_STEP_PIN         PE14
+## Drive3_DIR_PIN          PE8
+## Drive3_ENABLE_PIN       PE9
+## Drive3_UART_PIN         PE7
+
+## Z1
+## Drive4_STEP_PIN         PE15
+## Drive4_DIR_PIN          PE11
+## Drive4_ENABLE_PIN       PF2
+## Drive4_UART_PIN         PE10
+
+## Z2
+## Drive5_STEP_PIN         PE1
+## Drive5_DIR_PIN          PF0
+## Drive5_ENABLE_PIN       PC15
+## Drive5_UART_PIN         PF1
+
+## Z3
+## Drive6_STEP_PIN         PE0
+## Drive6_DIR_PIN          PG3
+## Drive6_ENABLE_PIN       PG4
+## Drive6_UART_PIN         PG2
+
+## Drive7_STEP_PIN         PE6
+## Drive7_DIR_PIN          PG6
+## Drive7_ENABLE_PIN       PG7
+## Drive7_UART_PIN         PG5
+
+##   TMC SPI MODE
+## TMC MOSI           PB4
+## TMC MISO           PB5
+## TMC SCK            PB3
+
+## HEAT0              PB0
+## HEAT1              PB1
+## HEAT2              PC7
+## HEAT3              PF7
+## HEAT4              PF6
+
+## BED                PE5
+
+## TH0 (H0 Temp)      PF4    #ADC0
+## TH1 (H1 Temp)      PF5    #ADC1
+## TH2 (H2 Temp)      PF9    #ADC2
+## TH3 (H3 Temp)      PF10   #ADC3
+## TH4 (H4 Temp)      PC0    #ADC4
+## TB  (Bed Temp)     PC1    #ADC5
+
+## FAN0               PA0
+## FAN1               PA1
+## FAN2               PA2
+## FAN3               PA3
+## FAN4               PA15
+## FAN5               PB11
+## FAN6               PB10
+## FAN7               PD12
+## FAN8               PD14
+## FAN9               PD15
+
+## SERVO              PC6   #BLTOUCH
+## PROBE              PC3   #BLTOUCH
+
+##加速度计
+##########################################
+# 5V # GND # PD0 # PD1 # PD3 # PD4 # PD5 #
+##########################################
+
+[mcu]
+serial: /dev/serial/by-id/usb-Klipper_stm32f407xx_1E003A000947393436343431-if00
+
+
+[printer]
+kinematics: corexy
+max_velocity: 450               
+max_accel: 10000   		    	
+max_accel_to_decel: 10000
+max_z_velocity: 30              #15, max 15 for 12V TMC Drivers, can increase for 24V
+max_z_accel: 350
+square_corner_velocity: 5.0
+
+[temperature_sensor FLY-Super8]
+sensor_type: temperature_mcu
+
+
+#####################################################################
+# X/Y Stepper Settings 
+# Z Stepper Settings   
+#####################################################################
+[include ./config/stepper.cfg]
+[include ./config/tmc2209.cfg]
+
+
+
+#
+[extruder]
+nozzle_diameter = 0.400
+rotation_distance = 200 * 16 / 562
+rotation_distance = 5.7 
+microsteps = 16
+filament_diameter = 1.750
+step_pin: PE4
+dir_pin: !PG0
+enable_pin: !PG1
+heater_pin: PB0
+sensor_pin: PF4
+sensor_type: ATC Semitec 104NT-4-R025H42G
+control: pid
+pid_Kp: 22.2
+pid_Ki: 1.08
+pid_Kd: 114
+min_temp: -50
+max_temp: 305
+min_extrude_temp: 180
+
+[heater_bed]
+heater_pin: PE5
+sensor_pin: PC1
+sensor_type: EPCOS 100K B57560G104F
+control: watermark
+min_temp: -50
+max_temp: 200
+
+[fan]
+pin: PA0 #FAN0
+#cycle_time: 0.50
+
+[controller_fan]
+pin: PA1
+
+
+
+[board_pins]
+aliases:
+    # EXP1 header
+    EXP1_1=PE12, EXP1_3=PB2, EXP1_5=PC14, EXP1_7=PG14, EXP1_9=<GND>,
+    EXP1_2=PE13, EXP1_4=PG8, EXP1_6=PC13, EXP1_8=PG13, EXP1_10=<5V>,
+    # EXP2 header
+    EXP2_1=PA6, EXP2_3=PB7, EXP2_5=PB6, EXP2_7=PG15,  EXP2_9=<GND>,
+    EXP2_2=PA4, EXP2_4=PA4, EXP2_6=PA7, EXP2_8=<RST>, EXP2_10=<5V>
+
+########################################
+ #Mini 12864 LCD
+########################################
+[display]
+lcd_type: uc1701
+cs_pin: EXP1_3
+a0_pin: EXP1_4
+rst_pin: EXP1_5
+contrast: 63
+encoder_pins: ^EXP2_5, ^!EXP2_3
+click_pin: ^!EXP1_2
+spi_bus: spi1
+
+#####适用于FLY Mini12864
+#[neopixel fly_mini12864]
+#pin: EXP1_6
+#chain_count: 3
+#initial_RED: 0.1
+#initial_GREEN: 0.5
+#initial_BLUE: 0.0
+#color_order: RGB
+
+#[include ./config/led_progress.cfg]
+
+[neopixel printhead]
+pin: PF9
+chain_count: 3
