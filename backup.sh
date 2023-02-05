@@ -1,4 +1,4 @@
-cp ../moonraker.conf .
+cp ../*.conf .
 cp ../printer.cfg .
 cp ../KlipperScreen.conf .
 cp ../config/* config
