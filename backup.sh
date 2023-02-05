@@ -1,4 +1,4 @@
-cp ../*.conf .
+cp ../* .
 cp ../printer.cfg .
 cp ../KlipperScreen.conf .
 cp ../config/* config
